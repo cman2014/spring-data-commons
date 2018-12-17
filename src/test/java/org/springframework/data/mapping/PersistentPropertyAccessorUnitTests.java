@@ -23,11 +23,11 @@ import lombok.Data;
 import lombok.Value;
 import lombok.experimental.Wither;
 
+import java.util.List;
+
 import org.junit.Test;
-import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.data.mapping.context.SampleMappingContext;
 import org.springframework.data.mapping.context.SamplePersistentProperty;
-import org.springframework.data.mapping.model.ConvertingPropertyAccessor;
 
 /**
  * @author Oliver Gierke
@@ -116,24 +116,8 @@ public class PersistentPropertyAccessorUnitTests {
 		});
 	}
 
-	@Test // DATACMNS-1377
-	public void shouldConvertToPropertyPathLeafType() {
-
-		Order order = new Order(new Customer("1"));
-
-		PersistentPropertyAccessor<Order> accessor = context.getPersistentEntity(Order.class).getPropertyAccessor(order);
-		ConvertingPropertyAccessor<Order> convertingAccessor = new ConvertingPropertyAccessor<>(accessor,
-				new DefaultConversionService());
-
-		PersistentPropertyPath<SamplePersistentProperty> path = context.getPersistentPropertyPath("customer.firstname",
-				Order.class);
-
-		convertingAccessor.setProperty(path, 2);
-
-		assertThat(convertingAccessor.getBean().getCustomer().getFirstname()).isEqualTo("2");
-	}
-
 	@Value
+
 	static class Order {
 		Customer customer;
 	}
@@ -142,6 +126,11 @@ public class PersistentPropertyAccessorUnitTests {
 	@AllArgsConstructor
 	static class Customer {
 		String firstname;
+	}
+
+	@Value
+	static class Customers {
+		@Wither List<Customer> customers;
 	}
 
 	// DATACMNS-1322

@@ -288,6 +288,8 @@ public interface PersistentEntity<T, P extends PersistentProperty<P>> extends It
 	 */
 	<B> PersistentPropertyAccessor<B> getPropertyAccessor(B bean);
 
+	<B> PersistentPropertyPathAccessor<B> getPropertyPathAccessor(B bean);
+
 	/**
 	 * Returns the {@link IdentifierAccessor} for the given bean.
 	 *

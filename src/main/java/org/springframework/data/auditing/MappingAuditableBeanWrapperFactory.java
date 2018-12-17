@@ -30,6 +30,7 @@ import org.springframework.data.domain.Auditable;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.PersistentPropertyAccessor;
+import org.springframework.data.mapping.PersistentPropertyPathAccessor;
 import org.springframework.data.mapping.PersistentPropertyPaths;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.mapping.context.PersistentEntities;
@@ -83,7 +84,7 @@ public class MappingAuditableBeanWrapperFactory extends DefaultAuditableBeanWrap
 						key -> new MappingAuditingMetadata(context, it.getClass()));
 
 				return Optional.<AuditableBeanWrapper<T>> ofNullable(metadata.isAuditable() //
-						? new MappingMetadataAuditableBeanWrapper<T>(entity.getPropertyAccessor(it), metadata)
+						? new MappingMetadataAuditableBeanWrapper<T>(entity.getPropertyPathAccessor(it), metadata)
 						: null);
 
 			}).orElseGet(() -> super.getBeanWrapperFor(source));
@@ -148,7 +149,7 @@ public class MappingAuditableBeanWrapperFactory extends DefaultAuditableBeanWrap
 	 */
 	static class MappingMetadataAuditableBeanWrapper<T> extends DateConvertingAuditableBeanWrapper<T> {
 
-		private final PersistentPropertyAccessor<T> accessor;
+		private final PersistentPropertyPathAccessor<T> accessor;
 		private final MappingAuditingMetadata metadata;
 
 		/**
@@ -158,7 +159,7 @@ public class MappingAuditableBeanWrapperFactory extends DefaultAuditableBeanWrap
 		 * @param accessor must not be {@literal null}.
 		 * @param metadata must not be {@literal null}.
 		 */
-		public MappingMetadataAuditableBeanWrapper(PersistentPropertyAccessor<T> accessor,
+		public MappingMetadataAuditableBeanWrapper(PersistentPropertyPathAccessor<T> accessor,
 				MappingAuditingMetadata metadata) {
 
 			Assert.notNull(accessor, "PersistentPropertyAccessor must not be null!");
